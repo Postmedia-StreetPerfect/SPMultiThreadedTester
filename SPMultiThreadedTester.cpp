@@ -7,7 +7,7 @@
 #include "SimpleLogger.h"
 #include "CsvFileQueue.h"
 
-int TestLpcClient(const int thread_num=10);
+bool TestLpcClient(const int thread_num=10);
 int LpcTask(int taskId);
 
 
@@ -19,35 +19,42 @@ int main(int argc, char* argv[])
 {
     logger.printf(SimpleLogger::blue, "Bill's mutil-threaded StreetPerfect native client tester, Nov 24 2026");
     auto start = std::chrono::steady_clock::now();
-    int ret = -1;
+    bool ok = false;
     
-    ret = TestLpcClient();
-    if (ret == 0) 
-        ret = TestLpcClient(); // checks that previous Disconnect worked
+    ok = TestLpcClient();
+    if (ok) ok = TestLpcClient(); // checks that previous Connect/Disconnect worked
     
     auto end = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     logger.printf("Completed elapsed time: %ld ms", duration.count());
 
-    return ret;
-
+    return !ok;
 }
 
-int TestLpcClient(const int thread_num)
+bool TestLpcClient(const int thread_num)
 {
     logger.printf("TestLpcClient() called");
     if (CsvQueue.Open("CP_CertsSampleData.txt")) {
         CsvQueue.GetRow(); // read the sample data file header
     }
-    ConnectionResponse con_resp = StreetPerfectNativeClient::Connect("StreetPerfectAddressAccuracy.Ini");
-    logger.printf("StreetPerfectConnect returned = %d, flag= %s, msg= %s", con_resp.ret, con_resp.status_flag.c_str(), con_resp.status_messages.c_str());
 
-    RunThreads(thread_num, LpcTask);
+    //const char* spini = "DatabaseName=C:\\Projects\\StreetPerfect\\StreetPerfect\\_DatabaseFiles\\Canadian\\StreetPerfect_Std.dbz;UserLicenseKey=zzz;";
+    const char* spini = "StreetPerfectAddressAccuracy.Ini";
 
-    con_resp = StreetPerfectNativeClient::Disconnect();
-    logger.printf("StreetPerfectDisconnect returned = %d, flag= %s, msg= %s", con_resp.ret, con_resp.status_flag.c_str(), con_resp.status_messages.c_str());
+    ConnectionResponse con_resp = StreetPerfectNativeClient::Connect(spini);
+    logger.printf(con_resp.ok() ? SimpleLogger::color::def : SimpleLogger::color::red
+        , "StreetPerfectConnect returned = %d, flag= %s, msg= %s", con_resp.ret, con_resp.status_flag.c_str(), con_resp.status_messages.c_str());
 
-    return con_resp.ret;
+    if (con_resp.ok()) 
+    {
+        RunThreads(thread_num, LpcTask);
+    }
+
+    // call disconnect even if Connect returns error
+    ConnectionResponse con_resp2 = StreetPerfectNativeClient::Disconnect();
+    logger.printf("StreetPerfectDisconnect returned = %d, flag= %s, msg= %s", con_resp2.ret, con_resp2.status_flag.c_str(), con_resp2.status_messages.c_str());
+
+    return con_resp.ok();
 }
 
 void RunThreads(const int thread_num, int (*func)(int))

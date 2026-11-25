@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SpaaSqaLpcClientWin64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SpaaSqaLpcClientNim64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)SharedFiles;</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
@@ -156,6 +156,12 @@
     <ClInclude Include="CsvFileQueue.h" />
     <ClInclude Include="SimpleLogger.h" />
     <ClInclude Include="SPClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CP_CertsSampleData.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
