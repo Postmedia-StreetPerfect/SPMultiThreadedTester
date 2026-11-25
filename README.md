@@ -9,5 +9,6 @@ StreetPerfect client test/example c++ multithreaded console app
 - CsvFileQueue.cpp parses a (simple) CSV file line by line for multithreaded access
 - SimpleLogger.cpp console logger for multithreaded access
 
-* To build this example add your SP SharedFiles folder to the header and library includes path
 
+* To build this example add your SP SharedFiles folder to the header and library includes path
+* By default a valid StreetPerfectAddressAccuracy.Ini is required in the project folder - but can be overridden in StreetPerfectNativeClient::Connect([ini file or ini key=val; pairs])
