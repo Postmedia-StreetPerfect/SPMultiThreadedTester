@@ -38,9 +38,8 @@ bool TestLpcClient(const int thread_num)
         CsvQueue.GetRow(); // read the sample data file header
     }
 
-    //const char* spini = "DatabaseName=C:\\Projects\\StreetPerfect\\StreetPerfect\\_DatabaseFiles\\Canadian\\StreetPerfect_Std.dbz;UserLicenseKey=MPAC9YSE474820105478803;";
-    const char* spini = "DatabaseName=/mnt/c/Projects/StreetPerfect/StreetPerfect/_DatabaseFiles/Canadian/StreetPerfect_Std.dbz;UserLicenseKey=WAPI9AT8609314457208255;";
-    //const char* spini = "StreetPerfectAddressAccuracy.Ini";
+    //const char* spini = "DatabaseName=C:\\Projects\\StreetPerfect\\StreetPerfect\\_DatabaseFiles\\Canadian\\StreetPerfect_Std.dbz;UserLicenseKey=;";
+    const char* spini = "StreetPerfectAddressAccuracy.Ini";
 
     ConnectionResponse con_resp = StreetPerfectNativeClient::Connect(spini);
     logger.printf(con_resp.ok() ? SimpleLogger::color::def : SimpleLogger::color::red

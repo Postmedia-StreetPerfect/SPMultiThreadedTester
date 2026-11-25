@@ -97,19 +97,19 @@
       <CppLanguageStandard>c++2a</CppLanguageStandard>
     </ClCompile>
     <Link>
-      <LibraryDependencies>SpaaSqaLpcClientNim64_d;pthread;dl</LibraryDependencies>
+      <LibraryDependencies>SpaaSqaLpcClientNim64;pthread</LibraryDependencies>
       <AdditionalLibraryDirectories>$(RemoteRootDir)/SharedFiles;%(Link.AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>SERP_LPC_SESSION;UNIX;_POSIX_SOURCE=1;_REENTRANT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <CppLanguageStandard>c++23</CppLanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)SharedFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppLanguageStandard>c++2a</CppLanguageStandard>
+      <AdditionalIncludeDirectories>/mnt/c/Projects/StreetPerfect/StreetPerfect/SharedFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)SharedFiles;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <LibraryDependencies>SpaaSqaLpcClientNim64</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(RemoteRootDir)/SharedFiles;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LibraryDependencies>SpaaSqaLpcClientNim64;pthread</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
