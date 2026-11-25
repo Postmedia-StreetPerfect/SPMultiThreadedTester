@@ -19,8 +19,8 @@ bool CsvFileQueue::Open(const char* csv_file)
     if (!_file.is_open()) {
         std::error_code ec(errno, std::generic_category());
 
-        std::cerr << "Open failed!\n"
-            << "Error code: " << ec.value() << '\n'
+        std::cerr << "Open failed, " << csv_file
+            << "\nError code: " << ec.value() << '\n'
             << "Message: " << ec.message() << '\n';
         return false;
     }

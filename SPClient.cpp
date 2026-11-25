@@ -1,5 +1,4 @@
 #include <mutex>
-#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -30,7 +29,7 @@ ConnectionResponse StreetPerfectNativeClient::Connect(const char *constr)
 	CStringOut status_messages_out(132);
 	CStringOut in_parameter_file(2048, constr == nullptr ? "StreetPerfectAddressAccuracy.Ini" : constr);
 
-	int ret = StreetPerfectConnect(in_parameter_file, status_flag_out, status_messages_out);
+	int ret = (int)StreetPerfectConnect(in_parameter_file, status_flag_out, status_messages_out);
 	ConnectionResponse r;
 	r.ret = ret;
 	r.status_flag = status_flag_out.str();
@@ -45,7 +44,7 @@ ConnectionResponse StreetPerfectNativeClient::Disconnect()
 	CStringOut status_messages_out(132);
 	CStringOut in_parameter_file(2048, "");
 
-	int ret = StreetPerfectDisconnect(in_parameter_file, status_flag_out, status_messages_out);
+	int ret = (int)StreetPerfectDisconnect(in_parameter_file, status_flag_out, status_messages_out);
 
 	ConnectionResponse r;
 	r.ret = ret;
@@ -76,7 +75,7 @@ caCorrectionResponse StreetPerfectNativeClient::caCorrectAddress(caAddressReques
 	// thread guard
 	std::lock_guard<std::mutex> lock(_mtx);
 
-	int ret = StreetPerfectProcessAddress(req.options.data(),
+	int ret = (int)StreetPerfectProcessAddress(req.options.data(),
 		CAN_in_function,
 		req.recipient.data(),
 		CAN_in_reserved,
@@ -124,13 +123,20 @@ caCorrectionResponse StreetPerfectNativeClient::caCorrectAddress(caAddressReques
 // helper
 std::list<std::string> StreetPerfectNativeClient::splitCRLF(const char* buf) 
 {
-	std::list<std::string> result;
-	if (!buf) return result;
+	std::list<std::string> columns;
+	std::string line(buf);
+	char delimiter = ',';
+	size_t start = 0;
+	size_t end = line.find(delimiter);
 
-	using namespace std::literals;
-	for (auto const &part : std::string_view(buf) | std::views::split("\r\n"sv)) {
-		result.emplace_back(part.begin(), part.end());
+	while (end != std::string::npos) {
+		columns.push_back(line.substr(start, end - start));
+		start = end + 1;
+		end = line.find(delimiter, start);
 	}
 
-	return result;
+	// Add the final token (handles trailing commas by pushing an empty string)
+	columns.push_back(line.substr(start));
+
+	return columns;
 }
